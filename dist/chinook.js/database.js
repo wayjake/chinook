@@ -5451,34 +5451,28 @@ async function writeItemsToFile(items) {
   const buffer = Buffer.from(JSON.stringify(items));
   await fs.writeFile(databasePath, buffer, "binary");
 }
-async function loadStorage() {
+async function connect() {
+  try {
+    await fs.access(databasePath);
+  } catch (err) {
+    await writeItemsToFile([]);
+  }
   try {
     const buffer = await fs.readFile(databasePath, "binary");
     items = JSON.parse(buffer.toString());
   } catch (err) {
-    if (err instanceof Error && err.message === `Unexpected end of JSON input`) {
-      await initStorageData(true);
-    } else {
-      throw err;
-    }
+    throw err;
   }
   return items;
 }
-async function initStorageData(force = false, initialDate = []) {
-  if (!force && true) {
-    throw new Error("This function is only available in testing mode");
-  }
-  return writeItemsToFile(initialDate);
-}
-var databasePath = "./chinook-test.db";
+var databasePath = "./chinook.db";
 var items;
 export {
   writeNewObject,
   writeItemsToFile,
-  loadStorage,
-  initStorageData,
   getLast,
   getItems,
   getItem,
-  deleteItem
+  deleteItem,
+  connect
 };

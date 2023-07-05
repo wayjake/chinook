@@ -1,19 +1,16 @@
 import { expect, test, describe, beforeAll } from "bun:test";
-import {
-  loadStorage,
-  writeNewObject,
-  deleteItem,
-  getLast,
-  getItem,
-  initStorageData,
-} from "./database";
+import { connect, writeNewObject, deleteItem, getLast, getItem } from "./database";
 
 describe("Basic db operations", () => {
   // make sure the test DB file is ready
   // and there is an empty items array
   beforeAll(async () => {
-    await initStorageData();
-    await loadStorage();
+    // I suppose this function should be
+    // tested too. Can we just assume
+    // if it doesn't work then everything
+    // else will fail? I mean, it could
+    // choke on FS problems...
+    await connect();
   });
 
   test("Write object", async () => {
@@ -23,7 +20,19 @@ describe("Basic db operations", () => {
       name: "Jake Berg",
     };
     await writeNewObject(id, itemToAdd);
-    const items = await loadStorage();
+    const items = await connect();
+    const item = items.find((item) => item.id === itemToAdd.id);
+    expect(item.id).toBe("32k324");
+  });
+
+  test("Write object", async () => {
+    const id = "32k324";
+    const itemToAdd = {
+      id,
+      name: "Jake Berg",
+    };
+    await writeNewObject(id, itemToAdd);
+    const items = await connect();
     const item = items.find((item) => item.id === itemToAdd.id);
     expect(item.id).toBe("32k324");
   });

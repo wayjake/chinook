@@ -1,14 +1,13 @@
 import { promises as fs } from "fs";
 import { last } from "lodash";
+import { initStorageData } from "./initTestData";
 
 /**
  * Chinook is based on a single local file at the
  * project root to store the stringified
  * version of the database.
  */
-const databasePath = process.env.NODE_ENV === "test" ? "./chinook.db" : "./chinook-test.db";
-
-type Items = any[];
+const databasePath = process.env.NODE_ENV === "test" ? "./chinook-test.db" : "./chinook.db";
 
 /**
  * This is our in-memory database
@@ -81,35 +80,27 @@ export async function writeItemsToFile(items: Items): Promise<void> {
 
 /**
  * Loads the items array from disk. If there is an error in reading or parsing the file,
- * it initializes an empty array.
+ * it initializes an empty array. It's called connect because that best matches the
+ * lingo around connecting to a database.
  *
  * @returns {Promise<Items>} A Promise that resolves with the loaded items array.
  */
-export async function loadStorage(): Promise<Items> {
+export async function connect(): Promise<Items> {
+  // Let's see if the file exists
+  // and create it if it doesn't!
+  try {
+    await fs.access(databasePath);
+  } catch (err) {
+    await writeItemsToFile([]);
+  }
+  // Now we can read from the file
+  // feeling pretty confident that it
+  // will exists now, at least.
   try {
     const buffer = await fs.readFile(databasePath, "binary");
     items = JSON.parse(buffer.toString());
   } catch (err: unknown) {
-    if (err instanceof Error && err.message === `Unexpected end of JSON input`) {
-      await initStorageData(true);
-    } else {
-      throw err;
-    }
+    throw err;
   }
   return items;
-}
-
-/**
- * Initializes the database with the provided initial data. This function is primarily used for testing.
- *
- * @param {boolean} [force=false] Whether to force initialization regardless of the NODE_ENV value.
- * @param {Items} [initialDate=[]] The initial data to be used for the database.
- * @throws {Error} If force is false and NODE_ENV is not "test".
- * @returns {Promise<void>}
- */
-export async function initStorageData(force = false, initialDate: Items = []): Promise<void> {
-  if (!force && process.env.NODE_ENV !== "test") {
-    throw new Error("This function is only available in testing mode");
-  }
-  return writeItemsToFile(initialDate);
 }

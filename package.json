@@ -1,11 +1,11 @@
 {
   "name": "chinookdb",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple local database API for rapid embedded development experience.",
   "main": "./src/database.ts",
   "scripts": {
-    "test": "bun test",
-    "test:w": "bun test --watch",
+    "test": "NODE_ENV=test bun test",
+    "test:w": "NODE_ENV=test bun test --watch",
     "build": "bun build ./src/database.ts --outdir ./dist/chinook.js"
   },
   "bin": {
