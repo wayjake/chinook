@@ -1,6 +1,5 @@
 import { promises as fs } from "fs";
 import { last } from "lodash";
-import { initStorageData } from "./initTestData";
 
 /**
  * Chinook is based on a single local file at the
@@ -17,9 +16,9 @@ let items: Items;
 /**
  * Exposes the items array incase that you'd like
  * to just access the object directly
- * @returns {Promise<Items>} A Promise that resolves with the items array
+ * @returns {Items} A Promise that resolves with the items array
  */
-export async function getItems(): Promise<Items> {
+export function getItems(): Items {
   return items;
 }
 
@@ -52,18 +51,18 @@ export async function deleteItem(id: string): Promise<void> {
  * Returns the first item from the items array that has the given id.
  *
  * @param {string} id The id of the item to find.
- * @returns {Promise<any>} A Promise that resolves with the item found or undefined.
+ * @returns {any} A Promise that resolves with the item found or undefined.
  */
-export async function getItem(id: string): Promise<any> {
+export function getItem(id: string): any {
   return items.find((item) => item.id === id);
 }
 
 /**
  * Returns the last item from the items array.
  *
- * @returns {Promise<any>} A Promise that resolves with the last item or undefined.
+ * @returns {any} A Promise that resolves with the last item or undefined.
  */
-export async function getLast(): Promise<any> {
+export function getLast(): any {
   return last(items);
 }
 
