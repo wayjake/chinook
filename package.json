@@ -1,14 +1,22 @@
 {
-  "name": "chinook",
+  "name": "chinookdb",
   "version": "1.0.0",
   "description": "A simple local database API for rapid embedded development experience.",
-  "main": "index.js",
+  "main": "./src/database.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "bun test",
+    "test:w": "bun test --watch",
+    "build": "bun build ./src/database.ts --outdir ./dist/chinook.js"
+  },
+  "bin": {
+    "chinook": "./dist/chinook.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wayjake/chinook.git"
+  },
+  "directories": {
+    "src": "./src"
   },
   "keywords": [
     "db",
