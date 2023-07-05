@@ -1,6 +1,6 @@
 {
   "name": "chinookdb",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple local database API for rapid embedded development experience.",
   "main": "./src/database.ts",
   "scripts": {
